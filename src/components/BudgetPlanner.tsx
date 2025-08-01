@@ -4,7 +4,8 @@ import { useState } from 'react';
 import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import { addBudget, deleteBudget, editBudget } from '@/lib/slices/budgetSlice';
 import { Budget } from '@/lib/slices/budgetSlice';
-import { Transaction } from '@/lib/slices/transactionSlice';
+// Removed unused import of Transaction
+// import { Transaction } from '@/lib/slices/transactionSlice';
 
 const BudgetPlanner = () => {
   const dispatch = useAppDispatch();
@@ -173,6 +174,7 @@ const BudgetPlanner = () => {
                 </select>
               </div>
               
+            
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Amount</label>
                 <input
@@ -274,6 +276,7 @@ const BudgetPlanner = () => {
                       status.percentage > 100 ? 'bg-red-500' : 
                       status.percentage > 80 ? 'bg-yellow-500' : 'bg-green-500'
                     }`}
+
                     style={{ width: `${Math.min(status.percentage, 100)}%` }}
                   ></div>
                 </div>
@@ -309,4 +312,6 @@ const BudgetPlanner = () => {
   );
 };
 
-export default BudgetPlanner; 
+export default BudgetPlanner;
+
+          

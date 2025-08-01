@@ -43,6 +43,11 @@ export default function Home() {
       <Header />
       
       <div className="container mx-auto px-4 py-8">
+        {/* Welcome Message */}
+        <div className="mb-6">
+          <h2 className="text-xl font-medium text-gray-700">Welcome, {user?.name || 'User'}!</h2>
+        </div>
+
         {/* Navigation Tabs */}
         <div className="bg-white rounded-xl shadow-lg p-2 mb-8">
           <div className="flex space-x-2">
@@ -88,3 +93,4 @@ export default function Home() {
     </div>
   );
 }
+

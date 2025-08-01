@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import { addTransaction, deleteTransaction, editTransaction } from '@/lib/slices/transactionSlice';
 import { Transaction } from '@/lib/slices/transactionSlice';
-import { Category } from '@/lib/slices/categorySlice';
 
 const TransactionManager = () => {
   const dispatch = useAppDispatch();
@@ -253,4 +252,4 @@ const TransactionManager = () => {
   );
 };
 
-export default TransactionManager; 
+export default TransactionManager;
