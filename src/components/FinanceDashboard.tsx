@@ -1,13 +1,15 @@
-import { useEffect, useState } from 'react';
+'use client';
 
-// TypeScript interfaces
+import { useState, useEffect } from 'react';
+
+// TypeScript interfaces for Transaction and Budget
 interface Transaction {
   id: number;
-  type: 'income' | 'expense';
-  amount: number;
   category: string;
+  amount: number;
   date: string;
   note: string;
+  type: 'income' | 'expense'; // Adding type for income/expense
 }
 
 interface Budget {
@@ -17,116 +19,36 @@ interface Budget {
   period: string;
 }
 
-const FinanceDashboard: React.FC = () => {
+// Mock data for demonstration
+const mockTransactions: Transaction[] = [
+  { id: 1, category: 'Housing', amount: 1200, date: '2024-07-15', note: 'Rent payment', type: 'expense' },
+  { id: 2, category: 'Food', amount: 300, date: '2024-07-14', note: 'Groceries', type: 'expense' },
+  { id: 3, category: 'Transportation', amount: 150, date: '2024-07-13', note: 'Gas for car', type: 'expense' },
+];
+
+const mockBudgets: Budget[] = [
+  { id: 1, category: 'Housing', amount: 1500, period: 'Monthly' },
+  { id: 2, category: 'Food', amount: 600, period: 'Monthly' },
+  { id: 3, category: 'Transportation', amount: 200, period: 'Monthly' },
+];
+
+const FinanceDashboard = () => {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [budgets, setBudgets] = useState<Budget[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [animate, setAnimate] = useState<boolean>(false);
-
-  // Mock data for demonstration
-  const mockTransactions: Transaction[] = [
-    {
-      id: 1,
-      type: 'income',
-      amount: 5000,
-      category: 'Salary',
-      date: '2024-07-15',
-      note: 'Monthly salary'
-    },
-    {
-      id: 2,
-      type: 'expense',
-      amount: 1200,
-      category: 'Housing',
-      date: '2024-07-14',
-      note: 'Rent payment'
-    },
-    // more mock transactions...
-  ];
-
-  const mockBudgets: Budget[] = [
-    {
-      id: 1,
-      category: 'Housing',
-      amount: 1500,
-      period: 'Monthly'
-    },
-    {
-      id: 2,
-      category: 'Food',
-      amount: 600,
-      period: 'Monthly'
-    },
-    // more mock budgets...
-  ];
 
   useEffect(() => {
-    // Simulate API call
-    const loadData = async (): Promise<void> => {
+    const fetchData = async () => {
+      // Simulate data fetching with delay
       setLoading(true);
-      // Simulate network delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      setTransactions(mockTransactions);
-      setBudgets(mockBudgets);
+      await new Promise(resolve => setTimeout(resolve, 1000));  // Simulate network delay
+      setTransactions(mockTransactions);  // Set mock transactions
+      setBudgets(mockBudgets);            // Set mock budgets
       setLoading(false);
-      setAnimate(true);
     };
 
-    loadData();
-  }, [mockTransactions, mockBudgets]);  // Add dependencies here
-
-  // Calculate financial insights
-  const totalIncome: number = transactions
-    .filter((t: Transaction) => t.type === 'income')
-    .reduce((sum: number, t: Transaction) => sum + t.amount, 0);
-
-  const totalExpenses: number = transactions
-    .filter((t: Transaction) => t.type === 'expense')
-    .reduce((sum: number, t: Transaction) => sum + t.amount, 0);
-
-  const netIncome: number = totalIncome - totalExpenses;
-  const savingsRate: number = totalIncome > 0 ? (netIncome / totalIncome) * 100 : 0;
-
-  // AI Insights
-  const getAIInsights = (): string[] => {
-    const insights: string[] = [];
-    
-    if (savingsRate < 20) {
-      insights.push('💡 Consider increasing your savings rate to 20% for better financial security');
-    }
-    
-    const expenseTransactions: Transaction[] = transactions.filter((t: Transaction) => t.type === 'expense');
-    if (expenseTransactions.length > 0) {
-      const topExpense: Transaction = expenseTransactions
-        .reduce((max: Transaction, t: Transaction) => t.amount > max.amount ? t : max, { id: 0, amount: 0, category: '', type: 'expense', date: '', note: '' });
-      
-      if (topExpense.amount > totalIncome * 0.3) {
-        insights.push(`⚠️ ${topExpense.category} is taking up a large portion of your income`);
-      }
-    }
-    
-    if (netIncome > 0) {
-      insights.push('🎉 Great job! You\'re maintaining a positive cash flow');
-    } else {
-      insights.push('📊 Focus on reducing expenses or increasing income to improve cash flow');
-    }
-    
-    return insights;
-  };
-
-  const insights: string[] = getAIInsights();
-
-  const handleViewAll = (): void => {
-    console.log('View all transactions');
-  };
-
-  const handleManageBudgets = (): void => {
-    console.log('Manage budgets');
-  };
-
-  const handleCreateBudget = (): void => {
-    console.log('Create budget');
-  };
+    fetchData(); // Fetch data on component mount
+  }, []); // Empty dependency array to run this only on component mount
 
   if (loading) {
     return (
@@ -149,11 +71,100 @@ const FinanceDashboard: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50">
-      {/* Mobile-first Container */}
-      <div className="px-3 sm:px-4 md:px-6 lg:px-8 py-4 sm:py-6 md:py-8">
-        <div className="max-w-7xl mx-auto space-y-4 sm:space-y-6 md:space-y-8">
-          {/* Your dashboard content here */}
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 px-4">
+      <div className="max-w-7xl mx-auto space-y-4 sm:space-y-6 md:space-y-8">
+
+        {/* Header */}
+        <div className="text-center sm:text-left">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold bg-gradient-to-r from-gray-800 via-blue-800 to-purple-800 bg-clip-text text-transparent mb-2 sm:mb-3">
+            Financial Dashboard
+          </h1>
+          <p className="text-sm sm:text-base md:text-lg text-gray-600 max-w-2xl">
+            Track your money, set budgets, and get AI-powered insights for smarter financial decisions.
+          </p>
+        </div>
+
+        {/* Key Metrics Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
+          <div className="group bg-gradient-to-br from-green-500 via-green-600 to-emerald-600 text-white p-4 sm:p-5 md:p-6 rounded-xl sm:rounded-2xl shadow-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-300">
+            <div className="flex items-center justify-between">
+              <div className="flex-1 min-w-0">
+                <p className="text-green-100 text-xs sm:text-sm font-medium mb-1 sm:mb-2">Total Income</p>
+                <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold truncate">${transactions.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0).toLocaleString()}</p>
+                <p className="text-green-200 text-xs mt-1 hidden sm:block">This month</p>
+              </div>
+              <div className="text-2xl sm:text-3xl md:text-4xl ml-2 group-hover:scale-110 transition-transform duration-300">💰</div>
+            </div>
+          </div>
+
+          <div className="group bg-gradient-to-br from-red-500 via-red-600 to-rose-600 text-white p-4 sm:p-5 md:p-6 rounded-xl sm:rounded-2xl shadow-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-300">
+            <div className="flex items-center justify-between">
+              <div className="flex-1 min-w-0">
+                <p className="text-red-100 text-xs sm:text-sm font-medium mb-1 sm:mb-2">Total Expenses</p>
+                <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold truncate">${transactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0).toLocaleString()}</p>
+                <p className="text-red-200 text-xs mt-1 hidden sm:block">This month</p>
+              </div>
+              <div className="text-2xl sm:text-3xl md:text-4xl ml-2 group-hover:scale-110 transition-transform duration-300">💸</div>
+            </div>
+          </div>
+
+          <div className="group bg-gradient-to-br from-blue-500 via-blue-600 to-cyan-600 text-white p-4 sm:p-5 md:p-6 rounded-xl sm:rounded-2xl shadow-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-300">
+            <div className="flex items-center justify-between">
+              <div className="flex-1 min-w-0">
+                <p className="text-blue-100 text-xs sm:text-sm font-medium mb-1 sm:mb-2">Net Income</p>
+                <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold truncate">${transactions.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0) - transactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0)}</p>
+                <p className="text-blue-200 text-xs mt-1 hidden sm:block">This month</p>
+              </div>
+              <div className="text-2xl sm:text-3xl md:text-4xl ml-2 group-hover:scale-110 transition-transform duration-300">📈</div>
+            </div>
+          </div>
+
+          <div className="group bg-gradient-to-br from-purple-500 via-purple-600 to-violet-600 text-white p-4 sm:p-5 md:p-6 rounded-xl sm:rounded-2xl shadow-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-300">
+            <div className="flex items-center justify-between">
+              <div className="flex-1 min-w-0">
+                <p className="text-purple-100 text-xs sm:text-sm font-medium mb-1 sm:mb-2">Savings Rate</p>
+                <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold">{(100 * (transactions.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0) - transactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0)) / transactions.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0)).toFixed(1)}%</p>
+                <p className="text-purple-200 text-xs mt-1 hidden sm:block">This month</p>
+              </div>
+              <div className="text-2xl sm:text-3xl md:text-4xl ml-2 group-hover:scale-110 transition-transform duration-300">🎯</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Transactions List */}
+        <div className="bg-white p-4 mt-4 rounded-xl shadow-lg">
+          <h2 className="text-2xl font-semibold">Transactions</h2>
+          <ul className="space-y-4 mt-4">
+            {transactions.map((transaction) => (
+              <li key={transaction.id} className="flex justify-between items-center">
+                <div className="flex items-center">
+                  <span>{transaction.category}</span>
+                  <span className="ml-2 text-gray-500 text-sm">{transaction.date}</span>
+                </div>
+                <div className="text-right text-lg font-semibold">
+                  ${transaction.amount.toLocaleString()}
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* Budgets List */}
+        <div className="bg-white p-4 mt-4 rounded-xl shadow-lg">
+          <h2 className="text-2xl font-semibold">Budgets</h2>
+          <ul className="space-y-4 mt-4">
+            {budgets.map((budget) => (
+              <li key={budget.id} className="flex justify-between items-center">
+                <div className="flex items-center">
+                  <span>{budget.category}</span>
+                  <span className="ml-2 text-gray-500 text-sm">{budget.period}</span>
+                </div>
+                <div className="text-right text-lg font-semibold">
+                  ${budget.amount.toLocaleString()}
+                </div>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </div>
