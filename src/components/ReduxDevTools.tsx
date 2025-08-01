@@ -3,17 +3,14 @@
 import React, { useEffect, useState } from 'react';
 
 export default function ReduxDevTools() {
-  // State to track if we are on the client-side
   const [isClient, setIsClient] = useState(false);
 
-  // Set the client flag to true on mount, so this will only run on the client-side
   useEffect(() => {
     setIsClient(true);
   }, []);
 
-  // Return null during server-side rendering to avoid errors
   if (!isClient) {
-    return null; 
+    return null; // Prevent rendering on the server side
   }
 
   return (
@@ -22,7 +19,7 @@ export default function ReduxDevTools() {
       
       <div className="space-y-4">
         <div className="p-4 bg-indigo-50 rounded-lg border border-indigo-200">
-          <h4 className="font-semibold text-indigo-800 mb-2">Browser Extension</h4>
+          <h4 className="font-semibold text-indigo-800 mb-2">&quot;Browser Extension&quot;</h4>
           <p className="text-sm text-indigo-700 mb-3">
             Install the Redux DevTools browser extension for advanced debugging:
           </p>
@@ -62,7 +59,7 @@ export default function ReduxDevTools() {
           <ol className="text-sm text-yellow-700 space-y-1 list-decimal list-inside">
             <li>Install the browser extension</li>
             <li>Open DevTools (F12)</li>
-            <li>Go to the "Redux" tab</li>
+            <li>Go to the &quot;Redux&quot; tab</li>
             <li>Interact with the app to see actions</li>
             <li>Click on any action to see state changes</li>
           </ol>
