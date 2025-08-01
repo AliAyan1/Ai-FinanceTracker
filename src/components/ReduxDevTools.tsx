@@ -1,6 +1,21 @@
 'use client';
 
+import React, { useEffect, useState } from 'react';
+
 export default function ReduxDevTools() {
+  // State to track if we are on the client-side
+  const [isClient, setIsClient] = useState(false);
+
+  // Set the client flag to true on mount, so this will only run on the client-side
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  // Return null during server-side rendering to avoid errors
+  if (!isClient) {
+    return null; 
+  }
+
   return (
     <div className="bg-white rounded-xl shadow-lg p-6">
       <h3 className="text-lg font-semibold mb-4">Redux DevTools</h3>
@@ -65,4 +80,4 @@ export default function ReduxDevTools() {
       </div>
     </div>
   );
-} 
+}
